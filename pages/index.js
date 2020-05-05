@@ -1,20 +1,18 @@
-import React from "react";
-import Container from "@material-ui/core/Container";
+import Reat from "react";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
-import Link from "../src/ui/Link";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-export default function Index() {
+const useStyles = makeStyles((theme) => ({}));
+
+export default function ProjectManager() {
+  const classes = useStyles();
+  const theme = useTheme();
   return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js example
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-      </Box>
-    </Container>
+    <Grid container>
+      <Grid item>
+        <Typography variant="h1">Projects</Typography>
+      </Grid>
+    </Grid>
   );
 }

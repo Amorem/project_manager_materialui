@@ -8,8 +8,38 @@ import AddIcon from "@material-ui/icons/Add";
 import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableHead from "@material-ui/core/TableHead";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import Paper from "@material-ui/core/Paper";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 const useStyles = makeStyles((theme) => ({}));
+
+function createData(
+  name,
+  date,
+  service,
+  features,
+  complexity,
+  platforms,
+  users,
+  total
+) {
+  return {
+    name,
+    date,
+    service,
+    features,
+    complexity,
+    platforms,
+    users,
+    total,
+  };
+}
 
 export default function ProjectManager() {
   const classes = useStyles();
@@ -18,6 +48,38 @@ export default function ProjectManager() {
   const [iOSChecked, setiOSChecked] = useState(false);
   const [androidChecked, setAndroidChecked] = useState(false);
   const [softwareChecked, setSoftwareChecked] = useState(false);
+  const [rows, setRows] = useState([
+    createData(
+      "Amorem",
+      "11-10-2019",
+      "Website",
+      "E-Commerce",
+      "N/A",
+      "N/A",
+      "N/A",
+      "$1500"
+    ),
+    createData(
+      "Bill Gates",
+      "10-12-2019",
+      "Custom Software",
+      "GPS, Push Notifications, User/Authentification, FileTransfer",
+      "Medium",
+      "Web Application",
+      "0-10",
+      "$1600"
+    ),
+    createData(
+      "Steeve Jobs",
+      "04-01-2015",
+      "Custom Software",
+      "Photo, Video, File Transfer, User/Authentification",
+      "Low",
+      "Web Application",
+      "10-100",
+      "$1320"
+    ),
+  ]);
 
   return (
     <Grid container>
@@ -29,7 +91,7 @@ export default function ProjectManager() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <AddIcon color="primary" />
+                <AddIcon color="primary" style={{ fontSize: 50 }} />
               </InputAdornment>
             ),
           }}
@@ -87,6 +149,45 @@ export default function ProjectManager() {
             labelPlacement="start"
           />
         </FormGroup>
+      </Grid>
+      <Grid container justify="flex-end" style={{ marginTop: "5em" }}>
+        <Grid item style={{ marginRight: 75 }}>
+          <FilterListIcon color="secondary" style={{ fontSize: 50 }} />
+        </Grid>
+      </Grid>
+      <Grid item style={{ marginBottom: "15em" }}>
+        <TableContainer component={Paper} elevation={0}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Name</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Service</TableCell>
+                <TableCell align="center">Features</TableCell>
+                <TableCell align="center">Complexity</TableCell>
+                <TableCell align="center">Platforms</TableCell>
+                <TableCell align="center">Users</TableCell>
+                <TableCell align="center">Total</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell align="center">{row.name}</TableCell>
+                  <TableCell align="center">{row.date}</TableCell>
+                  <TableCell align="center">{row.service}</TableCell>
+                  <TableCell align="center" style={{ maxWidth: "15em" }}>
+                    {row.features}
+                  </TableCell>
+                  <TableCell align="center">{row.complexity}</TableCell>
+                  <TableCell align="center">{row.platforms}</TableCell>
+                  <TableCell align="center">{row.users}</TableCell>
+                  <TableCell align="center">{row.total}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
     </Grid>
   );

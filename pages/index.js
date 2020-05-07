@@ -25,6 +25,8 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme) => ({
   service: {
@@ -55,6 +57,15 @@ function createData(
 }
 
 export default function ProjectManager() {
+  const platformsOptions = ["Web", "iOS", "Android"];
+  const featuresOptions = [
+    "Photo/Video",
+    "File Transfer",
+    "Users Authentification",
+    "Bio Metrics",
+    "Push Notifications",
+  ];
+
   const classes = useStyles();
   const theme = useTheme();
   const [websiteChecked, setWebSiteChecked] = useState(false);
@@ -68,6 +79,8 @@ export default function ProjectManager() {
   const [service, setService] = useState("");
   const [complexity, setComplexity] = useState("");
   const [users, setUsers] = useState("");
+  const [platforms, setPlatforms] = useState([]);
+  const [features, setFeatures] = useState([]);
 
   const [rows, setRows] = useState([
     createData(
@@ -278,6 +291,27 @@ export default function ProjectManager() {
                           />
                         </RadioGroup>
                       </Grid>
+                      <Grid item style={{ marginTop: "5em" }}>
+                        <Select
+                          displayEmpty
+                          style={{ width: "12em" }}
+                          MenuProps={{ style: { zIndex: 1302 } }}
+                          renderValue={
+                            platforms.length > 0 ? undefined : () => "Platform"
+                          }
+                          labelId="platforms"
+                          id="platforms"
+                          multiple
+                          value={platforms}
+                          onChange={(event) => setPlatforms(event.target.value)}
+                        >
+                          {platformsOptions.map((option) => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -342,7 +376,7 @@ export default function ProjectManager() {
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid item container direction="column" sm alignItems="center">
+                <Grid item container direction="column" sm>
                   <Grid item>
                     <TextField
                       value={total}
@@ -356,7 +390,7 @@ export default function ProjectManager() {
                       onChange={(event) => setTotal(event.target.value)}
                     />
                   </Grid>
-                  <Grid>
+                  <Grid item>
                     <Grid
                       item
                       container
@@ -392,6 +426,27 @@ export default function ProjectManager() {
                             control={<Radio />}
                           />
                         </RadioGroup>
+                      </Grid>
+                      <Grid item style={{ marginTop: "5em" }}>
+                        <Select
+                          displayEmpty
+                          style={{ width: "12em" }}
+                          MenuProps={{ style: { zIndex: 1302 } }}
+                          renderValue={
+                            features.length > 0 ? undefined : () => "Features"
+                          }
+                          labelId="features"
+                          id="features"
+                          multiple
+                          value={features}
+                          onChange={(event) => setFeatures(event.target.value)}
+                        >
+                          {featuresOptions.map((feature) => (
+                            <MenuItem key={feature} value={feature}>
+                              {feature}
+                            </MenuItem>
+                          ))}
+                        </Select>
                       </Grid>
                     </Grid>
                   </Grid>

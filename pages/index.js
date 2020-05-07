@@ -27,10 +27,21 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   service: {
     fontWeight: 300,
+  },
+  button: {
+    color: "#FFF",
+    backgroundColor: theme.palette.common.orange,
+    borderRadius: 50,
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.light,
+    },
   },
 }));
 
@@ -58,13 +69,14 @@ function createData(
 
 export default function ProjectManager() {
   const platformsOptions = ["Web", "iOS", "Android"];
-  const featuresOptions = [
+  let featuresOptions = [
     "Photo/Video",
     "File Transfer",
     "Users Authentification",
     "Bio Metrics",
     "Push Notifications",
   ];
+  let websiteOptions = ["Basic", "Interactive", "E-Commerce"];
 
   const classes = useStyles();
   const theme = useTheme();
@@ -114,6 +126,31 @@ export default function ProjectManager() {
       "$1320"
     ),
   ]);
+
+  const addProject = () => {
+    setRows([
+      ...rows,
+      createData(
+        name,
+        format(date, "MM/dd/yy"),
+        service,
+        features.join(", "),
+        service === "Website" ? "N/A" : complexity,
+        service === "Website" ? "N/A" : platforms.join(", "),
+        service === "Website" ? "N/A" : users,
+        `$${total}`
+      ),
+    ]);
+    setName("");
+    setDate(new Date());
+    setTotal("");
+    setService("");
+    setComplexity("");
+    setUsers("");
+    setPlatforms([]);
+    setFeatures([]);
+    setDialogOpen(false);
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -269,7 +306,10 @@ export default function ProjectManager() {
                           aria-label="service"
                           name="service"
                           value={service}
-                          onChange={(event) => setService(event.target.value)}
+                          onChange={(event) => {
+                            setService(event.target.value);
+                            setFeatures([]);
+                          }}
                         >
                           <FormControlLabel
                             classes={{ label: classes.service }}
@@ -294,6 +334,7 @@ export default function ProjectManager() {
                       <Grid item style={{ marginTop: "5em" }}>
                         <Select
                           displayEmpty
+                          disabled={service === "Website"}
                           style={{ width: "12em" }}
                           MenuProps={{ style: { zIndex: 1302 } }}
                           renderValue={
@@ -353,18 +394,21 @@ export default function ProjectManager() {
                         >
                           <FormControlLabel
                             classes={{ label: classes.service }}
+                            disabled={service === "Website"}
                             value="Low"
                             label="Low"
                             control={<Radio />}
                           />
                           <FormControlLabel
                             classes={{ label: classes.service }}
+                            disabled={service === "Website"}
                             value="Medium"
                             label="Medium"
                             control={<Radio />}
                           />
                           <FormControlLabel
                             classes={{ label: classes.service }}
+                            disabled={service === "Website"}
                             value="High"
                             label="High"
                             control={<Radio />}
@@ -409,18 +453,21 @@ export default function ProjectManager() {
                         >
                           <FormControlLabel
                             classes={{ label: classes.service }}
+                            disabled={service === "Website"}
                             value="0-10"
                             label="0-10"
                             control={<Radio />}
                           />
                           <FormControlLabel
                             classes={{ label: classes.service }}
+                            disabled={service === "Website"}
                             value="10-100"
                             label="10-100"
                             control={<Radio />}
                           />
                           <FormControlLabel
                             classes={{ label: classes.service }}
+                            disabled={service === "Website"}
                             value="100+"
                             label="100+"
                             control={<Radio />}
@@ -441,6 +488,9 @@ export default function ProjectManager() {
                           value={features}
                           onChange={(event) => setFeatures(event.target.value)}
                         >
+                          {service === "Website"
+                            ? (featuresOptions = websiteOptions)
+                            : null}
                           {featuresOptions.map((feature) => (
                             <MenuItem key={feature} value={feature}>
                               {feature}
@@ -451,6 +501,40 @@ export default function ProjectManager() {
                     </Grid>
                   </Grid>
                 </Grid>
+              </Grid>
+            </Grid>
+            <Grid container justify="center" style={{ marginTop: "3em" }}>
+              <Grid item>
+                <Button
+                  color="primary"
+                  style={{ fontWeight: 300 }}
+                  onClick={() => setDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={addProject}
+                  disabled={
+                    service === "Website"
+                      ? name.length === 0 ||
+                        total === 0 ||
+                        features.length === 0 ||
+                        features.length > 1
+                      : name.length === 0 ||
+                        total === 0 ||
+                        features.length === 0 ||
+                        users.length === 0 ||
+                        complexity.length === 0 ||
+                        platforms.length === 0 ||
+                        service.length === 0
+                  }
+                >
+                  Add Project
+                </Button>
               </Grid>
             </Grid>
           </DialogContent>

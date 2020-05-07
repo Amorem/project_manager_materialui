@@ -53,7 +53,8 @@ function createData(
   complexity,
   platforms,
   users,
-  total
+  total,
+  search
 ) {
   return {
     name,
@@ -64,6 +65,7 @@ function createData(
     platforms,
     users,
     total,
+    search,
   };
 }
 
@@ -93,6 +95,7 @@ export default function ProjectManager() {
   const [users, setUsers] = useState("");
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [search, setSearch] = useState("");
 
   const [rows, setRows] = useState([
     createData(
@@ -103,7 +106,8 @@ export default function ProjectManager() {
       "N/A",
       "N/A",
       "N/A",
-      "$1500"
+      "$1500",
+      true
     ),
     createData(
       "Bill Gates",
@@ -113,7 +117,8 @@ export default function ProjectManager() {
       "Medium",
       "Web Application",
       "0-10",
-      "$1600"
+      "$1600",
+      true
     ),
     createData(
       "Steeve Jobs",
@@ -123,7 +128,8 @@ export default function ProjectManager() {
       "Low",
       "Web Application",
       "10-100",
-      "$1320"
+      "$1320",
+      true
     ),
   ]);
 
@@ -138,7 +144,8 @@ export default function ProjectManager() {
         service === "Website" ? "N/A" : complexity,
         service === "Website" ? "N/A" : platforms.join(", "),
         service === "Website" ? "N/A" : users,
-        `$${total}`
+        `$${total}`,
+        true
       ),
     ]);
     setName("");
@@ -152,6 +159,25 @@ export default function ProjectManager() {
     setDialogOpen(false);
   };
 
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    const rowData = rows.map((row) =>
+      Object.values(row).filter((option) => option !== true && option !== false)
+    );
+    const matches = rowData.map((row) =>
+      row.map((option) =>
+        option.toLowerCase().includes(event.target.value.toLowerCase())
+      )
+    );
+    const newRows = [...rows];
+    matches.map((row, index) =>
+      row.includes(true)
+        ? (newRows[index].search = true)
+        : (newRows[index].search = false)
+    );
+    setRows(newRows);
+  };
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container>
@@ -160,6 +186,8 @@ export default function ProjectManager() {
         </Grid>
         <Grid item>
           <TextField
+            value={search}
+            onChange={handleSearch}
             InputProps={{
               endAdornment: (
                 <InputAdornment
@@ -247,20 +275,22 @@ export default function ProjectManager() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">{row.name}</TableCell>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.service}</TableCell>
-                    <TableCell align="center" style={{ maxWidth: "15em" }}>
-                      {row.features}
-                    </TableCell>
-                    <TableCell align="center">{row.complexity}</TableCell>
-                    <TableCell align="center">{row.platforms}</TableCell>
-                    <TableCell align="center">{row.users}</TableCell>
-                    <TableCell align="center">{row.total}</TableCell>
-                  </TableRow>
-                ))}
+                {rows
+                  .filter((row) => row.search === true)
+                  .map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell align="center">{row.name}</TableCell>
+                      <TableCell align="center">{row.date}</TableCell>
+                      <TableCell align="center">{row.service}</TableCell>
+                      <TableCell align="center" style={{ maxWidth: "15em" }}>
+                        {row.features}
+                      </TableCell>
+                      <TableCell align="center">{row.complexity}</TableCell>
+                      <TableCell align="center">{row.platforms}</TableCell>
+                      <TableCell align="center">{row.users}</TableCell>
+                      <TableCell align="center">{row.total}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
